@@ -1,7 +1,7 @@
 let counter = 0;
 let hr = new Image;
-let herox = 100;
-let heroy = 200;
+let playerx = 100;
+let playery = 200;
 let enemies = [];
 let enemiesSmall = [];
 let enemiesMediumSmall = [];
@@ -20,4 +20,7 @@ let enemiesBigLhs = [];
 let seaHeight = 668;
 
 let started = false;
-let paused = true;
+let paused = false;
+let scenery = [];
+let buttons = [];
+let buttonFactory;

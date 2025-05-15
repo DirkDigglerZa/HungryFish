@@ -3,8 +3,8 @@ function increment() {
 }
 
 function preload() {
-  // Load hero fish
-  heroRight = loadImage("assets/hero-right.gif");
+  // Load player fish
+  playerRight = loadImage("assets/hero-right.gif");
   heroLeft = loadImage("assets/hero-left.gif");
   heroDeath = loadImage("assets/blood1.gif");
 
@@ -12,8 +12,10 @@ function preload() {
   bottomSand = loadImage("assets/floor.png");
   seaweedMed = loadImage("assets/swm1.gif");
   seaweedMed2 = loadImage("assets/swm2.gif");
-  startButton = loadImage("assets/startButton.png");
+  startButton = loadImage("assets/startButton.png"); //loadImage("assets/startButton.png");
   startButtonClicked = loadImage("assets/startButtonClicked.png");
+  pauseButton =  loadImage("assets/paused.png");
+  pauseButtonClicked = loadImage("assets/pausedClicked.png");
 
   // Load medium enemy fish
   for (var i = 0; i <= 7; i++) {
@@ -38,7 +40,26 @@ function setup() {
 }
 
 function setupGame() {
-  hr = new Hero("Player1", herox, heroy, 24, 24, 100, heroRight);
+  // Player
+  hr = new Hero("Player1", playerx, playery, 24, 24, 100, playerRight);
+
+  // Scenery
+  scenery.push(new Scenery(seaweedMed, 42, 664, 0, 0));
+  scenery.push(new Scenery(seaweedMed2, 340, 668, 0, 0));
+  scenery.push(new Scenery(seaweedMed, 242, 664, 0, 0));
+  scenery.push(new Scenery(seaweedMed, 542, 664, 0, 0));
+  scenery.push(new Scenery(seaweedMed, 1002, 664, 0, 0));
+  scenery.push(new Scenery(seaweedMed2, 1043, 668, 0, 0));
+  scenery.push(new Scenery(seaweedMed, 1124, 664, 0, 0));
+
+  // Buttons
+  buttons.push(new Button(startButton,575, 600, 100, 30, ButtonTypes.START));
+  buttons.push(new Button(startButtonClicked,575, 600, 100, 30, ButtonTypes.STARTCLICKED));
+  buttons.push(new Button(pauseButton,625, 370, 30, 30, ButtonTypes.PAUSE));
+  buttons.push(new Button(pauseButtonClicked,625, 370, 30, 30, ButtonTypes.PAUSECLICKED));
+  buttonFactory = new ButtonFactory(buttons);
+
+  // Fish
   for (let i = 0; i < 10; i++) {   
     let enemyStartRandom = random(0.1,1);
     let enemyTiltRandom = random(-1,1);
@@ -72,20 +93,34 @@ function resetGame() {
 
 function draw() {
   background(30, 142, 239);
-  image(startButton, 575, 600, 100, 30);
   image(bottomSand, 0, 698);
-  image(seaweedMed2, 440, 668);
-  image(seaweedMed, 42, 664);
-  image(seaweedMed2, 340, 668);
-  image(seaweedMed, 242, 664);
-  image(seaweedMed, 542, 664);
-  image(seaweedMed, 1002, 664);
-  image(seaweedMed2, 1043, 668);
-  image(seaweedMed, 1124, 664);
 
-  if (mouseX >= 575 && mouseX <= 675) {
-    if (mouseY >= 600 && mouseY <= 630) {
-      image(startButtonClicked, 575, 600, 100, 30);
+  for (let i = 0; i < scenery.length; i++) {
+    scenery[i].show();
+  }
+
+  if (paused) {
+    let pB = buttons.find(x => x.type == ButtonTypes.PAUSE); 
+    if (pB) {
+      pB.show();
+    } 
+    for (let i = 0; i < buttons.length; i++) {
+      if (buttons[i].type == ButtonTypes.START) {
+        buttons.splice(i,1); 
+      }
+    }
+  }
+  else {
+    if (!started) {
+      buttonFactory.add(new Button(startButton,575, 600, 100, 30, ButtonTypes.START));
+      buttonFactory.get(ButtonTypes.START).show();
+      
+      if (mouseX >= 575 && mouseX <= 675) {
+        if (mouseY >= 600 && mouseY <= 630) {
+          buttonFactory.remove(ButtonTypes.START);
+          buttonFactory.get(ButtonTypes.STARTCLICKED).show();
+        }
+      }
     }
   }
 
@@ -166,9 +201,15 @@ function draw() {
   }
 }
 
-function addEnemyRhs() {
+function addEnemyLhs() {
   let r = floor(random(0, enemiesLhs.length));
   var enem = new Enemy("Test", 1200, floor(random(0, 720)), 100, enemiesLhs[r]);
+  enem.display();
+}
+
+function addEnemyRhs() {
+  let r = floor(random(0, enemiesLhs.length));
+  var enem = new Enemy("Test", floor(random(0, 1200)), 720, 100, enemiesRhs[r]);
   enem.display();
 }
 
@@ -183,12 +224,12 @@ function keyPressed() {
       setup();
     }
   if (keyCode == 32) {
+    paused = !paused;
     if (paused) {
       noLoop();
     } else {
       loop();
     }
-    paused = !paused;
   }
 }
 
