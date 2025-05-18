@@ -1,5 +1,5 @@
 class Enemy {
-    constructor(name, x, y, h, w, img, health, posStart, tTilt, tAngle, tSpeed) {
+    constructor(name, x, y, h, w, img, health, posStart, tTilt, tAngle, tSpeed, visible) {
       this.name = name;
       this.x = x;
       this.y = y;
@@ -10,6 +10,7 @@ class Enemy {
       this.tTilt = tTilt;
       this.tAngle = tAngle;
       this.tSpeed = tSpeed;
+      this.visible = visible;
     }
 
     // clicked(px, py) {
@@ -39,7 +40,9 @@ class Enemy {
       }
     
       show() {
-        image(this.img, this.x, this.y);
+        if (this.visible) {
+          image(this.img, this.x, this.y);     
+        }       
       }
 
       checkBounds() {
@@ -51,5 +54,9 @@ class Enemy {
           exited = true;
         }
         return exited;
+      }
+
+      hide() {
+        this.visible = false;
       }
 }

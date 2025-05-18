@@ -5,7 +5,7 @@ function increment() {
 function preload() {
   // Load player fish
   playerRight = loadImage("assets/hero-right.gif");
-  heroLeft = loadImage("assets/hero-left.gif");
+  playerLeft = loadImage("assets/hero-left.gif");
   heroDeath = loadImage("assets/blood1.gif");
 
   // Load Scenery
@@ -16,6 +16,7 @@ function preload() {
   startButtonClicked = loadImage("assets/startButtonClicked.png");
   pauseButton =  loadImage("assets/paused.png");
   pauseButtonClicked = loadImage("assets/pausedClicked.png");
+  logo = loadImage("assets/logo.png");
 
   // Load medium enemy fish
   for (var i = 0; i <= 7; i++) {
@@ -63,8 +64,8 @@ function setupGame() {
   for (let i = 0; i < 10; i++) {   
     let enemyStartRandom = random(0.1,1);
     let enemyTiltRandom = random(-1,1);
-    let enemyAngleRandom = random(0.1,3);
-    let enemySpeedRandom = random(0.1,3);   
+    let enemyAngleRandom = random(0.1,1);
+    let enemySpeedRandom = random(eSpeedMin, eSpeedMax);   
     let spriteMediumRandom = floor(random(0, enemiesRhs.length));  
     let spriteSmallRandom = floor(random(0, enemiesSmallRhs.length));
     let spriteBigRandom = floor(random(0, enemiesBigRhs.length));
@@ -75,9 +76,9 @@ function setupGame() {
     let spriteBigX = random(width);
     let spriteBigY = random(height);
 
-    let es = new Enemy('Enemy'+i, spriteSmallX, spriteSmallY, 0, 0, enemiesSmallRhs[spriteSmallRandom], floor(random(0,1000)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom);
-    let em = new Enemy('Enemy'+i, spriteMediumX, spriteMediumY, 0, 0, enemiesRhs[spriteMediumRandom], floor(random(0,1000)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom);
-    let el = new Enemy('Enemy'+i, spriteBigX, spriteBigY, 0, 0, enemiesBigRhs[spriteBigRandom], floor(random(0,1000)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom);
+    let es = new Enemy('Enemy'+i, spriteSmallX, spriteSmallY, 12, 30, enemiesSmallRhs[spriteSmallRandom], floor(random(0,14)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom, true);
+    let em = new Enemy('Enemy'+i, spriteMediumX, spriteMediumY, 0, 0, enemiesRhs[spriteMediumRandom], floor(random(0,25)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom, true);
+    let el = new Enemy('Enemy'+i, spriteBigX, spriteBigY, 0, 0, enemiesBigRhs[spriteBigRandom], floor(random(0,40)), enemyStartRandom, enemyTiltRandom, enemyAngleRandom, enemySpeedRandom, true);
     enemiesMedium.push(em);
     enemiesSmall.push(es);
     enemiesBig.push(el);
@@ -94,6 +95,7 @@ function resetGame() {
 function draw() {
   background(30, 142, 239);
   image(bottomSand, 0, 698);
+  currentState = GAME_STATE.STARTING;
 
   for (let i = 0; i < scenery.length; i++) {
     scenery[i].show();
@@ -114,7 +116,9 @@ function draw() {
     if (!started) {
       buttonFactory.add(new Button(startButton,575, 600, 100, 30, ButtonTypes.START));
       buttonFactory.get(ButtonTypes.START).show();
-      
+
+      image(logo, 250, 100, 800, 400);
+
       if (mouseX >= 575 && mouseX <= 675) {
         if (mouseY >= 600 && mouseY <= 630) {
           buttonFactory.remove(ButtonTypes.START);
@@ -136,12 +140,12 @@ function draw() {
     }
 
     if(keyIsDown(LEFT_ARROW)) {
-      hr.showLeft(heroLeft);
+      hr.showLeft(playerLeft);
       hr.moveLeft();
     }
 
     if(keyIsDown(RIGHT_ARROW)) {
-      hr.showRight(heroRight);
+      hr.showRight(playerRight);
       hr.moveRight();
     }
 
@@ -150,10 +154,10 @@ function draw() {
       enemiesSmall[i].move();
       enemiesSmall[i].show();
       if (enemiesSmall[i].checkBounds()) {
-          enemiesSmall.splice(i,1);    
+          enemiesSmall[i].hide();    
       } else {
         if (hr.intersects(enemiesSmall[i])) {
-          enemiesSmall.splice(i,1);
+            enemiesSmall[i].hide();   
           if (enemiesSmall[i] != undefined) {
               if (hr.checkDeath(enemiesSmall[i].health) == 0) {
                 
@@ -164,40 +168,40 @@ function draw() {
     }
 
     // Medium Enemies
-    for (let i = 0; i < enemiesMedium.length; i++) {
-      enemiesMedium[i].move();
-      enemiesMedium[i].show();
-      if (enemiesMedium[i].checkBounds()) {
-        enemiesMedium.splice(i,1);
-      } else {
-        if (hr.intersects(enemiesMedium[i])) {
-          enemiesMedium.splice(i,1);
-          if (enemiesMedium[i] != undefined) {
-              if (hr.checkDeath(enemiesMedium[i].health) == 0) {
+    // for (let i = 0; i < enemiesMedium.length; i++) {
+    //   enemiesMedium[i].move();
+    //   enemiesMedium[i].show();
+    //   if (enemiesMedium[i].checkBounds()) {
+    //      enemiesMedium[i].hide();    
+    //   } else {
+    //     if (hr.intersects(enemiesMedium[i])) {
+    //          enemiesMedium[i].hide(); 
+    //       if (enemiesMedium[i] != undefined) {
+    //           if (hr.checkDeath(enemiesMedium[i].health) == 0) {
                 
-            }
-          }
-        } 
-      }
-    }
+    //         }
+    //       }
+    //     } 
+    //   }
+    // }
 
-    // // Big Enemies
-    for (let i = 0; i < enemiesBig.length; i++) {
-      enemiesBig[i].move();
-      enemiesBig[i].show();
-      if (enemiesBig[i].checkBounds()) {
-        enemiesBig.splice(i,1);
-      } else {
-        if (hr.intersects(enemiesBig[i])) {
-          enemiesBig.splice(i,1);
-          if (enemiesBig[i] != undefined) {
-              if (hr.checkDeath(enemiesBig[i].health) == 0) {
+    // // // Big Enemies
+    // for (let i = 0; i < enemiesBig.length; i++) {
+    //   enemiesBig[i].move();
+    //   enemiesBig[i].show();
+    //   if (enemiesBig[i].checkBounds()) {
+    //       enemiesBig[i].hide(); 
+    //   } else {
+    //     if (hr.intersects(enemiesBig[i])) {
+    //       enemiesBig[i].hide(); 
+    //       if (enemiesBig[i] != undefined) {
+    //           if (hr.checkDeath(enemiesBig[i].health) == 0) {
                 
-            }
-          }
-        } 
-      }
-    }
+    //         }
+    //       }
+    //     } 
+    //   }
+    // }
   }
 }
 

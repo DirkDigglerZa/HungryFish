@@ -24,3 +24,9 @@ let paused = false;
 let scenery = [];
 let buttons = [];
 let buttonFactory;
+let email = "humbleadmirer88";
+
+let enemyScalingHealthValue = 0;
+
+let eSpeedMin = 0.2;
+let eSpeedMax = 1.4;

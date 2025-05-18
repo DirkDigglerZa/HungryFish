@@ -11,7 +11,7 @@ class Hero {
 
     show() {
         image(this.img, this.x, this.y);
-        text(this.health, this.x + 12, this.y - 1);
+        text(this.health, this.x + 12, this.y - 2);
     }
 
     showDeath(img) {
@@ -34,19 +34,27 @@ class Hero {
     }
 
     moveUp() {
-        this.y -=4;
+        if (this.y >= 10) {
+            this.y -=4;
+        }
     }
 
     moveDown() {
-        this.y +=4;
+        if (this.y <= seaHeight) {
+            this.y +=4;
+        }    
     }
 
     moveLeft() {
-        this.x -=4;
+        if (this.x >= 5) {
+            this.x -=4;
+        }
     }
 
     moveRight() {
-        this.x +=4;
+        if (this.x <= width-25) {
+            this.x +=4;
+        }
     }
 
     checkDeath(val) {
