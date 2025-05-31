@@ -29,6 +29,10 @@ class Hero {
         this.img = image;
     }
 
+    getHealth() {
+        return this.health;
+    }
+
     showLeft(image) {
         this.img = image;
     }
@@ -57,13 +61,22 @@ class Hero {
         }
     }
 
-    checkDeath(val) {
+    attackResult(val, state) {
         if (this.health > val) {
-            this.health += val;
-            return this.health + val;
+            switch(state) {
+                case GAME_PROGRESSION.ONE : this.health += SCORE_PROGRESSION.ONE; break;
+                case GAME_PROGRESSION.TWO : this.health += SCORE_PROGRESSION.TWO; break;
+                case GAME_PROGRESSION.THREE : this.health += SCORE_PROGRESSION.THREE; break;
+                case GAME_PROGRESSION.FOUR : this.health += SCORE_PROGRESSION.FOUR; break;
+                case GAME_PROGRESSION.FIVE : this.health += SCORE_PROGRESSION.FIVE; break;
+                case GAME_PROGRESSION.SIX : this.health += SCORE_PROGRESSION.SIX; break;
+                case GAME_PROGRESSION.SEVEN : this.health += SCORE_PROGRESSION.SEVEN; break;
+                case GAME_PROGRESSION.EIGHT : this.health += SCORE_PROGRESSION.EIGHT; break;
+                case GAME_PROGRESSION.NINE : this.health += SCORE_PROGRESSION.NINE; break;
+                case GAME_PROGRESSION.TEN : this.health += SCORE_PROGRESSION.TEN; break;
+            }
         } else {
-            this.health = 0;
-            return 0;
+            this.health = -1;
         }
     }
 }

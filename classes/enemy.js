@@ -13,50 +13,42 @@ class Enemy {
       this.visible = visible;
     }
 
-    // clicked(px, py) {
-    //     if (
-    //       px > this.x &&
-    //       px < this.x + this.r &&
-    //       py > this.y &&
-    //       py < this.y + this.r
-    //     ) {
-    //       this.kitten = flower;
-    //     }
-    //   }
+    startTime = 5;
+    frameCount = 60;
 
-      intersects(other) {
-        let d = dist(this.x, this.y, other.x, other.y);
-        return (d < this.w + other.w || d < this.h + other.h);
+    intersects(other) {
+      let d = dist(this.x, this.y, other.x, other.y);
+      return (d < this.w + other.w || d < this.h + other.h);
+    }
+  
+    move() {
+      if (this.tTilt > 0) {
+        this.x = this.x += -this.tSpeed;
+        this.y = this.y += this.tAngle;
+      } else {
+        this.x = this.x += -this.tSpeed;
+        this.y = this.y += -this.tAngle;
       }
-    
-      move() {
-        if (this.tTilt > 0) {
-          this.x = this.x += -this.tSpeed;
-          this.y = this.y += this.tAngle;
-        } else {
-          this.x = this.x += -this.tSpeed;
-          this.y = this.y += -this.tAngle;
-        }
-      }
-    
-      show() {
-        if (this.visible) {
-          image(this.img, this.x, this.y);     
-        }       
-      }
+    }
+  
+    show() {
+      if (this.visible) {
+        image(this.img, this.x, this.y);     
+      }       
+    }
 
-      checkBounds() {
-        let exited = false;
-        if (this.x < 0 || this.x > width) {
-          exited = true;
-        } 
-        if (this.y < 0 || this.y > seaHeight) {
-          exited = true;
-        }
-        return exited;
+    checkBounds() {
+      let exited = false;
+      if (this.x < 0 || this.x > width) {
+        exited = true;
+      } 
+      if (this.y < 0 || this.y > seaHeight) {
+        exited = true;
       }
+      return exited;
+    }
 
-      hide() {
-        this.visible = false;
-      }
+    hide() {
+      this.visible = false;
+    }
 }
