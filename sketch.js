@@ -4,11 +4,34 @@ let gameFont;
 let buttonSound, bgMusic;
 
 function preload() {
+  // Scenery
+  seaweedMed = loadImage('assets/swm2.gif');
 
+  // Player
+  playerRight = loadImage('assets/hero-right.gif');
+  playerLeft = loadImage('assets/hero-left.gif');
+
+  // Effects
+  blood2 = loadImage('assets/blood2.gif');
+
+  // Enemies
+  for (var i = 0; i <= GLOBALS.numerMediumEnemies; i++) {
+    enemiesRhs[i] = loadImage('assets/emr' + i + '.gif');
+    enemiesLhs[i] = loadImage('assets/eml' + i + '.gif');
+  }
+  for (var i = 0; i <= GLOBALS.numberSmallEnemies; i++) {
+    enemiesSmallRhs[i] = loadImage('assets/esr' + i + '.gif');
+    enemiesSmallLhs[i] = loadImage('assets/esl' + i + '.gif');
+  }
+  for (var i = 0; i <= 2; i++) {
+    enemiesBigRhs[i] = loadImage('assets/elr' + i + '.gif');
+    enemiesBigLhs[i] = loadImage('assets/ell' + i + '.gif');
+  }
 }
 
 function setup() { 
-createCanvas(1440, 900);
+  // Init Canvas
+  createCanvas(1440, 900);
   
   // Initialize state manager
   stateManager = new StateManager();

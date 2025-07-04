@@ -1,16 +1,17 @@
 class Enemy {
-    constructor(name, x, y, h, w, img, health, posStart, tTilt, tAngle, tSpeed, visible) {
+    constructor(name, x, y, h, w, img, hp, posStart, tTilt, tAngle, tSpeed, visible, difficulty) {
       this.name = name;
       this.x = x;
       this.y = y;
       this.h = h;
       this.w = w;
-      this.health = health;
+      this.hp = hp;
       this.img = img;
       this.tTilt = tTilt;
       this.tAngle = tAngle;
       this.tSpeed = tSpeed;
       this.visible = visible;
+      this.difficulty = difficulty;
     }
 
     startTime = 5;
@@ -22,12 +23,17 @@ class Enemy {
     }
   
     move() {
-      if (this.tTilt > 0) {
-        this.x = this.x += -this.tSpeed;
-        this.y = this.y += this.tAngle;
+      if (this.visible) {
+        if (this.tTilt > 0) {
+          this.x = this.x += -this.tSpeed;
+          this.y = this.y += this.tAngle;
+        } else {
+          this.x = this.x += -this.tSpeed;
+          this.y = this.y += -this.tAngle;
+        }
       } else {
-        this.x = this.x += -this.tSpeed;
-        this.y = this.y += -this.tAngle;
+        this.x = -7000;
+        this.y = -1000
       }
     }
   
@@ -42,7 +48,7 @@ class Enemy {
       if (this.x < 0 || this.x > width) {
         exited = true;
       } 
-      if (this.y < 0 || this.y > seaHeight) {
+      if (this.y < 0 || this.y > height) {
         exited = true;
       }
       return exited;
